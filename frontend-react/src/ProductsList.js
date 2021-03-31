@@ -5,54 +5,21 @@ const productService = new ProductsService();
 
 function ProductsList() {
 
-    const [products, setProducts] = useState([])
-    const [nextPageURL, setNextPageURL] = useState('')
-
-    /*componentDidMount() {
-        var self = this;
-        productService.getProducts().then(function (result) {
-            self.setState({ products:result.data, nextPageURL: result.nextlink})
-        });
-    }*/
-
-    /*useEffect(() => {
-        setInterval(() => {
-            productService.getProducts().then(function (result) {
-                console.log(result.data)
-                setProducts(result.data);
-                setNextPageURL(result.nextlink)
-            });
-        }, 5000);
-    });*/
+    const [products, setProducts] = useState([]);
+    const [nextPageURL, setNextPageURL] = useState('');
+    const [numPages, setNumPages] = useState(0);
+    const [countProds, setCountProds] = useState(0);
 
     useEffect(() => {
         const fetchData = async () => {
             const result = await productService.getProducts();
-            console.log(result.data)
             setProducts(result.data);
             setNextPageURL(result.nextlink);
+            setCountProds(result.count);
+            setNumPages(result.numpages);
         }
         fetchData();
     }, []);
-
-    /*handleDelete(e, pk) {
-        var self = this;
-        productService.deleteProduct({pk: pk}).then(() => {
-            var newArrProd = self.state.products.filter(function(obj) {
-                return obj.pk !== pk;
-            })
-            self.setState({products: newArrProd})
-        })
-    }*/
-
-    /*const handleDelete = (e, pk) => {
-        productService.deleteProduct({pk: pk}).then(() => {
-            var newArrProd = products.filter(function(obj) {
-                return obj.pk !== pk;
-            });
-            setProducts(newArrProd)
-        });
-    }*/
 
     const handleDelete = async (e, pk) => {
         await productService.deleteProduct({pk: pk});
@@ -62,25 +29,11 @@ function ProductsList() {
         setProducts(newArrProd);
     }
 
-    /*nextPage() {
-        var self = this;
-        productService.getProductsByURL(this.state.nextPageURL).then((result) => {
-            self.setState({ products:result.data, nextPageURL: result.nextlink})
-        })
-    }*/
-
     const nextPage = async e => {
         const result = await productService.getProductsByURL(nextPageURL);
             setProducts(result.data);
             setNextPageURL(result.nextlink);
     }
-
-    /*const nextPage = e => {
-        productService.getProductsByURL(nextPageURL).then((result) => {
-            setProducts(result.data);
-            setNextPageURL(result.nextlink)
-        })
-    }*/
 
     return(
         <div className="products--list">
@@ -111,14 +64,21 @@ function ProductsList() {
                         <td>{prod.brand_name}</td>
                         <td>{prod.price}</td>
                         <td>
-                            <button onClick={(e) => handleDelete(e, prod.pk)}>Excluir</button>
-                            <a href={"/product/" + prod.pk}>Editar</a>
+                            <a className="marginHor10" href={"/product/" + prod.pk}>Editar</a>
+                            <button className="btn btn-link marginHor10" onClick={(e) => handleDelete(e, prod.pk)}>Excluir</button>
                         </td>
                     </tr>
                 )}
                 </tbody>
             </table>
-            <button className="btn btn-primary" onClick={(e) => nextPage(e)}>Próximo</button>
+            <div className="row marginHor10">
+                <div className="col-sm">
+                    <p className="" >{countProds} produto(s) encontrado(s). {numPages} página(s).</p> 
+                </div>
+                <div className="col-sm">
+                    <button className="btn btn-primary marginHor10 position-absolute end-0" onClick={(e) => nextPage(e)}>Próximo</button>
+                </div>                           
+            </div>
         </div>
     );
 }

@@ -34,7 +34,7 @@ function ProductCreateUpdate () {
             "category_obj": (categoryName !== "") ? {"name": categoryName, "description": categoryDesc} : null,
             "brand_obj": (brandName !== "") ? {"name": brandName} : null
         });
-        if (result.status === 200) {
+        if (result.status === 201) {
             alert("Produto adicionado!");
         } else {
             alert("Erro ao adicionar produto. Verifique os campos e tente novamente.");
@@ -52,8 +52,8 @@ function ProductCreateUpdate () {
             "brand": product.brand,
             "color": product.color,
             "price": product.price,
-            "brand_obj": brandName ? {"name": brandName} : null,
-            "category_obj": categoryName ? {"name": categoryName, "description": categoryDesc} : null,
+            "category_obj": (categoryName !== "") ? {"name": categoryName, "description": categoryDesc} : null,
+            "brand_obj": (brandName !== "") ? {"name": brandName} : null
         });
         console.log(result.status)
         /*if (result.status === 201) {
@@ -75,10 +75,10 @@ function ProductCreateUpdate () {
     const showCategoryDiv = () => (
         <div className="row">
             <label>Nova categoria:</label>
-            <input className="form-control col-sm marginHor10" type="text" value={categoryName} onChange={(e) => setCategoryName(categoryName)} placeholder="Nome da categoria" />
-            <input className="form-control col-sm marginHor10" type="text" value={categoryDesc} onChange={(e) => setCategoryDesc(categoryDesc)} placeholder="Descrição" />
+            <input className="form-control col-sm marginHor10" type="text" onChange={e => setCategoryName(e.target.value)} placeholder="Nome da categoria" />
+            <input className="form-control col-sm marginHor10" type="text" onChange={e => setCategoryDesc(e.target.value)} placeholder="Descrição" />
             <div className="col-sm">
-                Fechar
+                <button className="btn btn-link marginVert10" onClick={(e) => {setCatVisible(false); setCategoryName("")}}>Cancelar</button>
             </div>
         </div>
     );
@@ -86,9 +86,9 @@ function ProductCreateUpdate () {
     const showBrandDiv = () => (
         <div className="row">
             <label>Nova marca:</label>
-            <input className="form-control col-sm marginHor10" type="text" value={brandName} onChange={(e) => setBrandName(brandName)} placeholder="Nome da marca" />
+            <input className="form-control col-sm marginHor10" type="text" onChange={e => setBrandName(e.target.value)} placeholder="Nome da marca" />
             <div className="col-sm">
-                Fechar
+                <button className="btn btn-link marginVert10" onClick={(e) => {setBraVisible(false); setBrandName("")}}>Cancelar</button>
             </div>
         </div>
     );
@@ -123,9 +123,9 @@ function ProductCreateUpdate () {
 
             <label>Categoria:</label>
             <select className="form-control" name="category" ref={register}>
-                <option>Selecione</option>
+            <option value={null}>Selecione</option>
                 {categories.map( c => 
-                    <option value={c.pk}>{c.name}</option>
+                    <option key={c.pk} value={c.pk}>{c.name}</option>
                  )}
             </select>
             <div>
@@ -136,7 +136,6 @@ function ProductCreateUpdate () {
 
             <label>Tipo:</label>
             <select className="form-control" name="productType" required ref={register}>
-                <option>Selecione</option>
                 {typeOpts.map( (t, index) =>
                     <option value={index+1}>{t}</option>
                  )}
@@ -144,7 +143,6 @@ function ProductCreateUpdate () {
 
             <label>Gênero:</label>
             <select className="form-control" name="gender" required ref={register}>
-                <option>Selecione</option>
                 {genderOpts.map( (g, index) => 
                     <option value={index+1}>{g}</option>
                  )}
@@ -152,7 +150,6 @@ function ProductCreateUpdate () {
 
             <label>Tamanho:</label>
             <select className="form-control" name="size" required ref={register}>
-                <option>Selecione</option>
                 {sizeOpts.map( (s, index) => 
                     <option value={index+1}>{s}</option>
                  )}
@@ -163,9 +160,9 @@ function ProductCreateUpdate () {
 
             <label>Marca:</label>
             <select className="form-control" name="brand" ref={register}>
-                <option>Selecione</option>
+                <option value={null}>Selecione</option>
                 {brands.map( b =>
-                    <option value={b.pk}>{b.name}</option>
+                    <option key={b.pk} value={b.pk}>{b.name}</option>
                  )}
             </select>
             <div>
@@ -175,9 +172,13 @@ function ProductCreateUpdate () {
             {braVisible ? showBrandDiv() : null}
 
             <label>Preço:</label>
-            <input className="form-control" type="text" name="price" required ref={register} />
+            <input className="form-control" type="text" pattern="[+,0-9.]*" name="price" required ref={register} />
 
-            <input className="btn btn-primary marginVert10" type="submit" value="Salvar" />
+            <div className="row">
+                <div className="col-sm">
+                    <input className="btn btn-success position-absolute end-50 marginVert10" type="submit" value="Salvar" />
+                </div>
+            </div>
         </div>
         </form>
     );

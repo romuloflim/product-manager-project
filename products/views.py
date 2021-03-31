@@ -34,7 +34,8 @@ def products_list(request):
 
         return Response({
             'data':serializer.data, 
-            'count': paginator.count, 
+            'count': paginator.count,
+            'perpage': paginator.per_page,
             'numpages':paginator.num_pages, 
             'nextlink':'/api/products/?page='+str(nextPage),
             'prevlink':'/api/products/?page='+str(previousPage),
@@ -43,17 +44,17 @@ def products_list(request):
     elif request.method == 'POST':
         data = request.data
 
-        '''if data['category_obj']:
-            cat_serializer = ProductCategorySerializer(data.category_obj)
+        if data['category_obj']:
+            cat_serializer = ProductCategorySerializer(data=data['category_obj'])
             if cat_serializer.is_valid():
                 cat_serializer.save()
-                data['category'] = cat_serializer.data.pk
+                data['category'] = cat_serializer.data['pk']
         
         if data['brand_obj']:
-            bran_serializer = ProductCategorySerializer(data.category_obj)
+            bran_serializer = BrandSerializer(data=data['brand_obj'])
             if bran_serializer.is_valid():
                 bran_serializer.save()
-                data['brand'] = bran_serializer.data.pk'''
+                data['brand'] = bran_serializer.data['pk']
 
         serializer = ProductSerializer(data=data)
         if serializer.is_valid():

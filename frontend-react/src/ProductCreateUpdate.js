@@ -55,12 +55,11 @@ function ProductCreateUpdate () {
             "category_obj": (categoryName !== "") ? {"name": categoryName, "description": categoryDesc} : null,
             "brand_obj": (brandName !== "") ? {"name": brandName} : null
         });
-        console.log(result.status)
-        /*if (result.status === 201) {
+        if (result.status === 200) {
             alert("Informações sobre o produto alteradas!");
         }else {
             alert("Erro ao alterar dados do produto. Verifique os campos e tente novamente.");
-        }*/
+        }
     }
 
     const onSubmit = data => {
@@ -75,8 +74,8 @@ function ProductCreateUpdate () {
     const showCategoryDiv = () => (
         <div className="row">
             <label>Nova categoria:</label>
-            <input className="form-control col-sm marginHor10" type="text" onChange={e => setCategoryName(e.target.value)} placeholder="Nome da categoria" />
-            <input className="form-control col-sm marginHor10" type="text" onChange={e => setCategoryDesc(e.target.value)} placeholder="Descrição" />
+            <input className="form-control col-sm marginHor10 marginVert10" type="text" onChange={e => setCategoryName(e.target.value)} placeholder="Nome da categoria" />
+            <input className="form-control col-sm marginHor10 marginVert10" type="text" onChange={e => setCategoryDesc(e.target.value)} placeholder="Descrição" />
             <div className="col-sm">
                 <button className="btn btn-link marginVert10" onClick={(e) => {setCatVisible(false); setCategoryName("")}}>Cancelar</button>
             </div>
@@ -86,9 +85,9 @@ function ProductCreateUpdate () {
     const showBrandDiv = () => (
         <div className="row">
             <label>Nova marca:</label>
-            <input className="form-control col-sm marginHor10" type="text" onChange={e => setBrandName(e.target.value)} placeholder="Nome da marca" />
+            <input className="form-control col-sm marginHor10 marginVert10" type="text" onChange={e => setBrandName(e.target.value)} placeholder="Nome da marca" />
             <div className="col-sm">
-                <button className="btn btn-link marginVert10" onClick={(e) => {setBraVisible(false); setBrandName("")}}>Cancelar</button>
+                <button className="btn btn-link marginVert10 marginVert10" onClick={(e) => {setBraVisible(false); setBrandName("")}}>Cancelar</button>
             </div>
         </div>
     );
@@ -120,7 +119,6 @@ function ProductCreateUpdate () {
         <div className="form-group">
             <label>Nome:</label>
             <input className="form-control" type="text" name="name" required ref={register} />
-
             <label>Categoria:</label>
             <select className="form-control" name="category" ref={register}>
             <option value={null}>Selecione</option>
@@ -140,24 +138,20 @@ function ProductCreateUpdate () {
                     <option value={index+1}>{t}</option>
                  )}
             </select>
-
             <label>Gênero:</label>
             <select className="form-control" name="gender" required ref={register}>
                 {genderOpts.map( (g, index) => 
                     <option value={index+1}>{g}</option>
                  )}
             </select>
-
             <label>Tamanho:</label>
             <select className="form-control" name="size" required ref={register}>
                 {sizeOpts.map( (s, index) => 
                     <option value={index+1}>{s}</option>
                  )}
             </select>
-
             <label>Cor:</label>
             <input className="form-control" type="text" required name="color" ref={register} />
-
             <label>Marca:</label>
             <select className="form-control" name="brand" ref={register}>
                 <option value={null}>Selecione</option>

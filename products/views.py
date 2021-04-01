@@ -1,11 +1,8 @@
-from django.db.models import manager
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
 
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from rest_framework.serializers import Serializer
-from rest_framework.utils import serializer_helpers
 from .models import Product, ProductCategory
 from .serializers import *
 
@@ -74,7 +71,22 @@ def products_detail(request, pk):
         return Response(serializer.data)
 
     elif request.method == 'PUT':
-        serializer = ProductSerializer(product, data=request.data, context={'request':request})
+
+        data = request.data
+
+        if data['category_obj']:
+            cat_serializer = ProductCategorySerializer(data=data['category_obj'])
+            if cat_serializer.is_valid():
+                cat_serializer.save()
+                data['category'] = cat_serializer.data['pk']
+        
+        if data['brand_obj']:
+            bran_serializer = BrandSerializer(data=data['brand_obj'])
+            if bran_serializer.is_valid():
+                bran_serializer.save()
+                data['brand'] = bran_serializer.data['pk']
+
+        serializer = ProductSerializer(product, data=data, context={'request':request})
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
